@@ -1,21 +1,29 @@
-/* Base Application Styles */
-body {
-  color: #fff;
-  background: #222;
+.board-div {
+  width: 400px;
+  height: 400px;
+  position: relative;
+  font-size: 0;
 }
 
-.index img {
-  margin: 40px auto;
-  border-radius: 4px;
-  background: #fff;
-  display: block;
+.base-div {
+  border: 1px solid black;
+  box-sizing: border-box;
+  width: 200px;
+  height: 200px;
+  display: inline-block;
 }
 
-.index .notice {
-  margin: 20px auto;
-  padding: 15px 0;
-  text-align: center;
-  border: 1px solid #000;
-  border-width: 1px 0;
-  background: #666;
+.absolute-div {
+  border: 1px solid black;
+  box-sizing: border-box;
+  width: 200px;
+  height: 200px;
+  position: absolute;
+  top: 100px;
+  left: 100px;
+  background: white;
+}
+
+#app{
+  height: 400px;
 }
