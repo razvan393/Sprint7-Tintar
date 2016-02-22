@@ -1,29 +1,58 @@
 .board-div {
-  width: 400px;
-  height: 400px;
+  width: 402px;
+  height: 402px;
   position: relative;
   font-size: 0;
+  margin: 20px;
 }
 
 .base-div {
-  border: 1px solid black;
-  box-sizing: border-box;
   width: 200px;
   height: 200px;
   display: inline-block;
 }
 
+.second-base-div {
+  width: 149px;
+  height: 149px;
+  display: inline-block;
+}
+
 .absolute-div {
-  border: 1px solid black;
-  box-sizing: border-box;
-  width: 200px;
-  height: 200px;
+  width: 300px;
+  height: 300px;
   position: absolute;
-  top: 100px;
-  left: 100px;
+  top: 50px;
+  left: 50px;
+  font-size: 0;
   background: white;
 }
 
-#app{
-  height: 400px;
+.second-absolute-div {
+  border: 2px solid black;
+  box-sizing: border-box;
+  width: 200px;
+  height: 200px;
+  top: 50px;
+  left: 50px;
+  position: absolute;
+  background: white;
+}
+
+.points {
+  background: gray;
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  z-index: 9999;
+  font-size: 15px;
+}
+
+.board-div,
+.absolute-div,
+.second-base-div,
+.base-div{
+  border: 1px solid black;
+  box-sizing: border-box;
 }
