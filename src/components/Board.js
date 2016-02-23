@@ -87,12 +87,31 @@ class Board extends React.Component {
     return obj;
   }
 
+  isWin(array, index) {
+    var numberOf0 = 0;
+    var numberOf1 = 0;
+    for(let i=0; i<array.length; i++) {
+      if(this.state.array[array[i]] === 0) {
+        numberOf0 ++;
+      } else if(this.state.array[array[i]] === 1) {
+        numberOf1 ++;
+      }
+    }
+    if(((numberOf0 >= 2)&&(this.state.array[index] === 0)) ||((numberOf1 >= 2)&&(this.state.array[index] === 1))){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   render() {
     const points = [];
     const pointsOnGrid = [];
     if (this.state.phase === 2)
       for (let i = 0; i <= 23; i++) {
-        console.log(this.getNeighbours(i));
+        if(this.isWin(this.getNeighbours(i),i)){
+          console.log((this.state.array[i]===1 ? 'Red' : 'Black')+ ' Won' );
+        }
       }
     for (let i = 0; i < 24; i++) {
       let left = '';
