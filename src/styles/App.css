@@ -40,7 +40,6 @@
 }
 
 .points {
-  background: gray;
   border-radius: 50%;
   width: 10px;
   height: 10px;
@@ -55,4 +54,16 @@
 .base-div{
   border: 1px solid black;
   box-sizing: border-box;
+}
+
+.red {
+  background: red;
+}
+
+.black {
+  background: black;
+}
+
+span {
+  font-size: 20px;
 }
