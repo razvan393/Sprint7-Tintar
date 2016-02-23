@@ -29,7 +29,7 @@
 }
 
 .second-absolute-div {
-  border: 2px solid black;
+  border: 2px solid grey;
   box-sizing: border-box;
   width: 200px;
   height: 200px;
@@ -41,18 +41,39 @@
 
 .points {
   border-radius: 50%;
-  width: 10px;
-  height: 10px;
+  width: 20px;
+  height: 20px;
   position: absolute;
   z-index: 9999;
   font-size: 15px;
+}
+
+.grid-points {
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  z-index: 999;
+  background: grey;
+}
+
+.game-info {
+  border: solid 2px gray;
+  width: 26%;
+  margin: 1%;
+  padding: 2%;
+}
+
+.game-info span,
+.game-info button {
+  margin-left: 5px;
 }
 
 .board-div,
 .absolute-div,
 .second-base-div,
 .base-div{
-  border: 1px solid black;
+  border: 1px solid grey;
   box-sizing: border-box;
 }
 

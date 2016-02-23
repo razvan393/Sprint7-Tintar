@@ -3,8 +3,8 @@ require('styles/App.css');
 
 import React from 'react';
 
-var Grid = React.createClass({
-  render: function () {
+class Grid extends React.Component{
+  render () {
     return (
       <div className="grid">
         <div className="base-div"></div>
@@ -21,6 +21,6 @@ var Grid = React.createClass({
       </div>
     )
   }
-})
+}
 
 export default Grid;

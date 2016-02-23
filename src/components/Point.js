@@ -3,16 +3,16 @@ require('styles/App.css');
 
 import React from 'react';
 
-var Point = React.createClass({
-  onClick: function () {
+class Point extends React.Component{
+  onClick () {
     this.props.onClick(this.props.player, this.props.index);
-  },
+  }
 
-  render: function () {
+  render () {
     return (
-      <div style={this.props.style} onClick={this.onClick} className='points'></div>
+      <div style={this.props.style} onClick={this.onClick.bind(this)} className='points'></div>
     )
   }
-});
+}
 
 export default Point;

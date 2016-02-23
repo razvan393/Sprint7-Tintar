@@ -4,22 +4,20 @@ require('styles/App.css');
 import React from 'react';
 import Point from './point.js';
 import Grid from './grid.js';
+import GridPoint from './gridPoints.js';
 
-var Board = React.createClass({
-  getInitialState: function () {
-    var player = 1;
-    var red = 9;
-    var black = 9;
-    var array = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1];
-    return {
-      player: player,
-      array: array,
-      red: red,
-      black: black
-    }
-  },
+class Board extends React.Component{
+  constructor(props) {
+    super(props);
+    this.state = {
+      player: 1,
+      red: 9,
+      black: 9,
+      array: [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+    };
+  }
 
-  onPointClick: function (player, index) {
+  onPointClick (player, index) {
     if (this.state.array[index] === -1){
       if ((player==1)&&(this.state.red > 0)) {
         this.state.player = 0;
@@ -32,13 +30,13 @@ var Board = React.createClass({
       }
       this.forceUpdate();
     }
-  },
+  }
 
-  getPosOnSquares: function (index) {
+  getPosOnSquares(index) {
     return Math.floor(index/8);
-  },
+  }
 
-  getAbsPosX: function (index, width) {
+  getAbsPosX(index, width) {
     if((index < 1) || (index > 5)) {
       return 0;
     } else if (index===1 || index===5) {
@@ -46,9 +44,9 @@ var Board = React.createClass({
     } else {
       return 2*width;
     }
-  },
+  }
 
-  getAbsPosY: function (index, width) {
+  getAbsPosY(index, width) {
     if(index < 3) {
       return 0;
     } else if (index ===3 || index===7){
@@ -56,24 +54,32 @@ var Board = React.createClass({
     } else {
       return 2*width;
     }
-  },
+  }
 
-  render: function () {
-    var points = [];
-    var style = '';
-    var left = '';
-    var top = '';
-    var background = '';
-    for (var i=0; i<24; i++){
+  resetState() {
+    this.state.player = 1;
+    this.state.red = 9;
+    this.state.black = 9;
+    this.state.array = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1];
+    this.forceUpdate();
+  }
+
+  render () {
+    const points = [];
+    const pointsOnGrid = [];
+    for (let i=0; i<24; i++){
+      let left = '';
+      let top = '';
+      let background = '';
       if(i<8) {
-        left=this.getAbsPosX(i-(this.getPosOnSquares(i)*8),200)-5;
-        top=this.getAbsPosY(i-(this.getPosOnSquares(i)*8),200)-5;
+        left=this.getAbsPosX(i-(this.getPosOnSquares(i)*8),200)-10;
+        top=this.getAbsPosY(i-(this.getPosOnSquares(i)*8),200)-10;
       } else if (i>15) {
-        left=this.getAbsPosX(i-(this.getPosOnSquares(i)*8),100)+95;
-        top=this.getAbsPosY(i-(this.getPosOnSquares(i)*8),100)+95;
+        left=this.getAbsPosX(i-(this.getPosOnSquares(i)*8),100)+90;
+        top=this.getAbsPosY(i-(this.getPosOnSquares(i)*8),100)+90;
       } else {
-        left=this.getAbsPosX(i-(this.getPosOnSquares(i)*8),149)+45;
-        top=this.getAbsPosY(i-(this.getPosOnSquares(i)*8),149)+45;
+        left=this.getAbsPosX(i-(this.getPosOnSquares(i)*8),149)+40;
+        top=this.getAbsPosY(i-(this.getPosOnSquares(i)*8),149)+40;
       }
       if (this.state.array[i] === 1){
         background = 'red';
@@ -82,20 +88,26 @@ var Board = React.createClass({
       } else {
         background = 'grey';
       }
-      style={left:left, top:top, background: background};
-      points.push(<Point key = {i} style = {style} onClick={this.onPointClick} index={i} player={this.state.player} />);
+      const style={left:left, top:top, background: background};
+      const gridStyle={left:left-5, top:top-5};
+      points.push(<Point key = {i} style = {style} onClick={this.onPointClick.bind(this)} index={i} player={this.state.player} />);
+      pointsOnGrid.push(<GridPoint key = {i} style={gridStyle}> </GridPoint>)
     }
-
     return (
       <div>
-        <div>Red: {this.state.red} Black: {this.state.black}</div>
+        <div className="game-info">
+          <span>Red: {this.state.red}</span>
+          <span>Black: {this.state.black}</span>
+          <button onClick={this.resetState.bind(this)}>Reset game</button>
+        </div>
         <div className="board-div">
           {points}
+          {pointsOnGrid}
           <Grid/>
         </div>
       </div>
     )
   }
-});
+}
 
 export default Board;
