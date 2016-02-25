@@ -15,7 +15,7 @@ class Board extends React.Component {
       black: 9,
       phase: 1,
       isRemove: 0,
-      isSelected: 0,
+      isSelected: -1,
       redWin: 0,
       blackWin: 0,
       array: [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
@@ -47,27 +47,38 @@ class Board extends React.Component {
         this.forceUpdate();
       }
       if ((this.state.red === 0) && (this.state.black === 0) && (this.isMill(obj.line, index) || this.isMill(obj.column, index))) {
-        console.log((this.state.array[index] === 1 ? 'Red' : 'Black') + ' can move an opponents piece!');
+        alert((this.state.array[index] === 1 ? 'Red' : 'Black') + ' can move an opponents piece!');
         this.state.isRemove = 1;
       } else if ((this.state.red === 0) && (this.state.black === 0)) {
         this.state.phase = 2;
       }
 
-    } else if ((this.state.phase === 2) && (this.state.isSelected === 0)) {
+    } else if ((this.state.phase === 2) && (this.state.isSelected === -1)) {
       if (this.state.array[index] !== -1) {
         this.state.isSelected = index;
         this.forceUpdate();
       }
-    } else if ((this.state.phase === 2) && (this.state.isSelected !== 0)) {
+    } else if((this.state.phase === 2) && (this.state.isSelected === index)) {
+        this.state.isSelected = -1;
+        this.forceUpdate();
+    } else if ((this.state.phase === 2) && (this.state.isSelected !== -1) && (this.state.player === this.state.array[this.state.isSelected])) {
       if ((this.state.array[index] === -1) && (this.isInArray(this.getPosMove(this.state.isSelected), index))) {
         this.state.array[index] = this.state.array[this.state.isSelected];
         this.state.array[this.state.isSelected] = -1;
-        this.state.isSelected = 0;
+        this.state.isSelected = -1;
+        if(player === 1) {
+          this.state.player = 0;
+        } else {
+          this.state.player = 1;
+        }
         this.forceUpdate();
       }
+    } else if ((this.state.phase === 2) && (this.state.isSelected !== -1) && (this.state.array[index] !== -1) && (this.state.player !== this.state.array[this.state.isSelected])) {
+        this.state.isSelected = index;
+      this.forceUpdate();
     }
     if (this.isMill(obj.line, index) || this.isMill(obj.column, index)) {
-      console.log((this.state.array[index] === 1 ? 'Red' : 'Black') + ' can move an opponents piece!');
+      alert((this.state.array[index] === 1 ? 'Red' : 'Black') + ' can move an opponents piece!');
       this.state.isRemove = 1;
       this.forceUpdate();
     }
@@ -120,6 +131,9 @@ class Board extends React.Component {
     this.state.red = 9;
     this.state.black = 9;
     this.state.phase = 1;
+    this.state.isSelected = -1;
+    this.state.redWin = 0;
+    this.state.blackWin = 0;
     this.state.array = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1];
     this.forceUpdate();
   }
@@ -216,25 +230,29 @@ class Board extends React.Component {
       } else {
         background = 'grey';
       }
-      const style = {left: left, top: top, background: background};
+      const isSelected = this.state.isSelected === i ? 'solid 3px green' : '';
+      const style = {left: left, top: top, background: background, border: isSelected};
       const gridStyle = {left: left - 5, top: top - 5};
-      points.push(<Point key={i} style={style} onClick={this.onPointClick.bind(this)} index={i}
+      points.push(<Point key={i} style={style} isSelected={isSelected} onClick={this.onPointClick.bind(this)} index={i}
                          player={this.state.player}/>);
       pointsOnGrid.push(<GridPoint key={i} style={gridStyle}> </GridPoint>)
     }
     return (
       <div>
-        <div className="game-info">
-          <span>Red: {this.state.red}</span>
-          <span>Black: {this.state.black}</span>
-          <button onClick={this.resetState.bind(this)}>Reset game</button>
-        </div>
         <div className="board-div">
           {points}
           {pointsOnGrid}
           <Grid/>
         </div>
-        <div>This is phase {this.state.phase}</div>
+        <div className="game-info">
+          <div>
+            <button onClick={this.resetState.bind(this)}>Reset game</button>
+          </div>
+          <span>Red: {this.state.red}</span>
+          <span>Black: {this.state.black}</span>
+          <div>{this.state.player === 1 ? 'Red ' : 'Black '} player</div>
+          <div>This is phase {this.state.phase}</div>
+        </div>
       </div>
     )
   }

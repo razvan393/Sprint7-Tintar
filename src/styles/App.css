@@ -59,14 +59,14 @@
 
 .game-info {
   border: solid 2px gray;
-  width: 26%;
+  width: 15%;
   margin: 1%;
   padding: 2%;
 }
 
 .game-info span,
 .game-info button {
-  margin-left: 5px;
+  margin-right: 5px;
 }
 
 .board-div,
@@ -87,4 +87,9 @@
 
 span {
   font-size: 20px;
+}
+
+.board-div,
+.game-info {
+  display: inline-block;
 }
