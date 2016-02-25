@@ -24,69 +24,84 @@ class Board extends React.Component {
 
   onPointClick(player, index) {
     var obj = this.getNeighbours(index);
-    if (this.state.isRemove === 1) {
-      if(this.state.array[index] === 1) {
-        this.state.blackWin ++;
-      } else {
-        this.state.redWin ++;
+    const isRemove = this.state.isRemove;
+    const array = this.state.array;
+    const phase = this.state.phase;
+    const red = this.state.red;
+    const black = this.state.black;
+    const isSelected = this.state.isSelected;
+
+    if (isRemove === 1) {
+      if ((player === array[index]) && !(this.isMill(obj.line, index) || this.isMill(obj.column, index))) {
+        if (array[index] === 1) {
+          this.state.blackWin++;
+        } else {
+          this.state.redWin++;
+        }
+        this.state.array[index] = -1;
+        this.state.isRemove = 0;
+        this.forceUpdate();
       }
-      this.state.array[index] = -1;
-      this.state.isRemove = 0;
-      this.forceUpdate();
-    } else if (this.state.phase === 1) {
-      if (this.state.array[index] === -1) {
-        if ((player == 1) && (this.state.red > 0)) {
+    } else if (phase === 1) {
+      if (array[index] === -1) {
+        if ((player == 1) && (red > 0)) {
           this.state.player = 0;
           this.state.array[index] = 1;
           this.state.red -= 1;
-        } else if (this.state.black > 0) {
+        } else if (black > 0) {
           this.state.player = 1;
           this.state.array[index] = 0;
           this.state.black -= 1;
         }
         this.forceUpdate();
+        if ((this.isMill(obj.line, index) || this.isMill(obj.column, index)) ) {
+          alert((this.state.array[index] === 1 ? 'Red' : 'Black') + ' can move an opponents piece!');
+          this.state.isRemove = 1;
+          this.forceUpdate();
+        }
       }
-      if ((this.state.red === 0) && (this.state.black === 0) && (this.isMill(obj.line, index) || this.isMill(obj.column, index))) {
-        alert((this.state.array[index] === 1 ? 'Red' : 'Black') + ' can move an opponents piece!');
+      if ((red === 0) && (black === 0) && (this.isMill(obj.line, index) || this.isMill(obj.column, index)) ) {
+        alert((array[index] === 1 ? 'Red' : 'Black') + ' can move an opponents piece!');
         this.state.isRemove = 1;
-      } else if ((this.state.red === 0) && (this.state.black === 0)) {
+      } else if ((red === 0) && (black === 0)) {
         this.state.phase = 2;
       }
-
-    } else if ((this.state.phase === 2) && (this.state.isSelected === -1)) {
-      if (this.state.array[index] !== -1) {
-        this.state.isSelected = index;
-        this.forceUpdate();
-      }
-    } else if((this.state.phase === 2) && (this.state.isSelected === index)) {
-        this.state.isSelected = -1;
-        this.forceUpdate();
-    } else if ((this.state.phase === 2) && (this.state.isSelected !== -1) && (this.state.player === this.state.array[this.state.isSelected])) {
-      if ((this.state.array[index] === -1) && (this.isInArray(this.getPosMove(this.state.isSelected), index))) {
-        this.state.array[index] = this.state.array[this.state.isSelected];
-        this.state.array[this.state.isSelected] = -1;
-        this.state.isSelected = -1;
-        if(player === 1) {
-          this.state.player = 0;
-        } else {
-          this.state.player = 1;
+    } else if (phase === 2) {
+      if (isSelected === -1) {
+        if (array[index] !== -1) {
+          this.state.isSelected = index;
+          this.forceUpdate();
         }
+      } else if (isSelected === index) {
+        this.state.isSelected = -1;
+        this.forceUpdate();
+      } else if ((isSelected !== -1) && (player === array[isSelected])) {
+        if ((array[index] === -1) && (this.isInArray(this.getPosMove(isSelected), index))) {
+          this.state.array[index] = this.state.array[isSelected];
+          this.state.array[isSelected] = -1;
+          this.state.isSelected = -1;
+          if ((this.isMill(obj.line, index) || this.isMill(obj.column, index)) ) {
+            alert((this.state.array[index] === 1 ? 'Red' : 'Black') + ' can move an opponents piece!');
+            this.state.isRemove = 1;
+            this.forceUpdate();
+          }
+          if (player === 1) {
+            this.state.player = 0;
+          } else {
+            this.state.player = 1;
+          }
+          this.forceUpdate();
+        }
+      } else if ((isSelected !== -1) && (array[index] !== -1) && (player !== array[isSelected])) {
+        this.state.isSelected = index;
         this.forceUpdate();
       }
-    } else if ((this.state.phase === 2) && (this.state.isSelected !== -1) && (this.state.array[index] !== -1) && (this.state.player !== this.state.array[this.state.isSelected])) {
-        this.state.isSelected = index;
-      this.forceUpdate();
     }
-    if (this.isMill(obj.line, index) || this.isMill(obj.column, index)) {
-      alert((this.state.array[index] === 1 ? 'Red' : 'Black') + ' can move an opponents piece!');
-      this.state.isRemove = 1;
-      this.forceUpdate();
-    }
-    if (this.state.redWin === 7){
+    if (this.state.redWin === 7) {
       this.resetState();
       alert('Red won');
     }
-    if (this.state.blackWin === 7){
+    if (this.state.blackWin === 7) {
       this.resetState();
       alert('Black won');
     }
@@ -100,7 +115,6 @@ class Board extends React.Component {
     }
     return false;
   }
-
 
   getPosOnSquares(index) {
     return Math.floor(index / 8);
