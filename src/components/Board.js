@@ -34,14 +34,9 @@ class Board extends React.Component {
 
     if (isRemove === 1) {
       if ((player === array[index]) && !(this.isMill(obj.line, index) || this.isMill(obj.column, index))) {
-        if (array[index] === 1) {
-          this.state.blackWin++;
-        } else {
-          this.state.redWin++;
-        }
-        this.state.array[index] = -1;
-        this.state.isRemove = 0;
-        this.forceUpdate();
+        this.removePiece(array, index);
+      } else if ((player === array[index]) && (this.searchMill(array, array[index]))){
+        this.removePiece(array, index);
       }
     } else if (phase === 1) {
       if (array[index] === -1) {
@@ -56,14 +51,16 @@ class Board extends React.Component {
         }
         this.forceUpdate();
         if ((this.isMill(obj.line, index) || this.isMill(obj.column, index))) {
-          alert((this.state.array[index] === 1 ? 'Red' : 'Black') + ' can move an opponents piece!');
           this.state.isRemove = 1;
-          this.forceUpdate();
+          this.forceUpdate(() => {
+            alert((this.state.array[index] === 1 ? 'Red' : 'Black') + ' can move an opponents piece!');
+          });
         }
       }
       if ((red === 0) && (black === 0) && (this.isMill(obj.line, index) || this.isMill(obj.column, index))) {
         alert((array[index] === 1 ? 'Red' : 'Black') + ' can move an opponents piece!');
         this.state.isRemove = 1;
+        this.forceUpdate();
       } else if ((red === 0) && (black === 0)) {
         this.state.phase = 2;
       }
@@ -82,9 +79,10 @@ class Board extends React.Component {
           this.state.array[isSelected] = -1;
           this.state.isSelected = -1;
           if ((this.isMill(obj.line, index) || this.isMill(obj.column, index))) {
-            alert((this.state.array[index] === 1 ? 'Red' : 'Black') + ' can move an opponents piece!');
             this.state.isRemove = 1;
-            this.forceUpdate();
+            this.forceUpdate(() => {
+              alert((this.state.array[index] === 1 ? 'Red' : 'Black') + ' can move an opponents piece!');
+            });
           }
           if (player === 1) {
             this.state.player = 0;
@@ -106,6 +104,30 @@ class Board extends React.Component {
       this.resetState();
       alert('Black won');
     }
+  }
+
+  removePiece(array, index) {
+    if (array[index] === 1) {
+      this.state.blackWin++;
+    } else {
+      this.state.redWin++;
+    }
+    this.state.array[index] = -1;
+    this.state.isRemove = 0;
+    this.forceUpdate();
+  }
+
+  searchMill (array, player) {
+    var check = true;
+    for (let i = 0; i< array.length; i++) {
+      if (array[i] === player){
+        const obj = this.getNeighbours(i);
+        if (!(this.isMill(obj.line, i) || this.isMill(obj.column, i))){
+          check = false;
+        }
+      }
+    }
+    return check;
   }
 
   isInArray(array, number) {
@@ -149,6 +171,7 @@ class Board extends React.Component {
     this.state.isSelected = -1;
     this.state.redWin = 0;
     this.state.blackWin = 0;
+    this.state.isRemove = 0;
     this.state.array = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1];
     this.forceUpdate();
   }
@@ -232,14 +255,14 @@ class Board extends React.Component {
       let top = '';
       let background = '';
       if (i < 8) {
-        left = this.getAbsPosX(i - (this.getPosOnSquares(i) * 8), 200) - 15;
-        top = this.getAbsPosY(i - (this.getPosOnSquares(i) * 8), 200) - 15;
+        left = this.getAbsPosX(i - (this.getPosOnSquares(i) * 8), 200) - 10;
+        top = this.getAbsPosY(i - (this.getPosOnSquares(i) * 8), 200) - 10;
       } else if (i > 15) {
-        left = this.getAbsPosX(i - (this.getPosOnSquares(i) * 8), 100) + 85;
-        top = this.getAbsPosY(i - (this.getPosOnSquares(i) * 8), 100) + 85;
+        left = this.getAbsPosX(i - (this.getPosOnSquares(i) * 8), 100) + 90;
+        top = this.getAbsPosY(i - (this.getPosOnSquares(i) * 8), 100) + 90;
       } else {
-        left = this.getAbsPosX(i - (this.getPosOnSquares(i) * 8), 149) + 35;
-        top = this.getAbsPosY(i - (this.getPosOnSquares(i) * 8), 149) + 35;
+        left = this.getAbsPosX(i - (this.getPosOnSquares(i) * 8), 149) + 40;
+        top = this.getAbsPosY(i - (this.getPosOnSquares(i) * 8), 149) + 40;
       }
       if (this.state.array[i] === 1) {
         background = 'red';
@@ -250,12 +273,14 @@ class Board extends React.Component {
       }
       const isSelected = this.state.isSelected === i ? 'solid 3px green' : '';
       const style = {left: left, top: top, background: background, border: isSelected};
-      const gridStyle = {left: left, top: top};
-      points.push(<Point key={i} style={style} isSelected={isSelected} onClick={this.onPointClick.bind(this)} index={i} player={this.state.player}/>);
-      pointsOnGrid.push(<GridPoint key={i} index={i} onClick={this.onPointClick.bind(this)} player={this.state.player} style={gridStyle}/>)
+      const gridStyle = {left: left-5, top: top-5};
+      if (this.state.array[i] !== -1) {
+        points.push(<Point key={i} style={style} color={background} isSelected={isSelected} onClick={this.onPointClick.bind(this)} index={i} player={this.state.player}/>);
+      }
+      pointsOnGrid.push(<GridPoint key={i} style={gridStyle} isSelected={isSelected} onClick={this.onPointClick.bind(this)} index={i} player={this.state.player} />)
     }
     return (
-      <div>
+      <div className="board">
         <div className="board-div">
           {points}
           {pointsOnGrid}
@@ -263,7 +288,7 @@ class Board extends React.Component {
         </div>
         <div className="game-info">
           <div>
-            <button onClick={this.resetState.bind(this)}>Reset game</button>
+            <button className="myButton" onClick={this.resetState.bind(this)}>Reset game</button>
           </div>
           <div className="pieces-div">
             <PiecesLeft style={colorRed} count={this.state.red}/>

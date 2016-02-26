@@ -9,8 +9,10 @@ class Point extends React.Component{
   }
 
   render () {
+    var clasa = this.props.color === 'red' ? 'red-points' : 'black-points';
+    var nameClass = 'points ' + clasa;
     return (
-      <div style={this.props.style} onClick={this.onClick.bind(this)} className='points'></div>
+      <div style={this.props.style} onClick={this.onClick.bind(this)} className={nameClass}></div>
     )
   }
 }
