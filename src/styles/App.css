@@ -40,7 +40,8 @@
 }
 
 .board {
-  margin: 0 20%;
+  margin: 0 10%;
+  position: relative;
 }
 
 .myButton {
@@ -99,9 +100,9 @@
 }
 
 .red-points {
-  -webkit-box-shadow: 1px 3px 1px #701917;
-  -moz-box-shadow: 1px 3px 1px #701917;
-  box-shadow: 1px 3px 1px #701917;
+  -webkit-box-shadow: 0px 0px 5px 2px #701917;
+  -moz-box-shadow: 0px 0px 5px 2px #701917;
+  box-shadow: 0px 0px 5px 2px #701917;
 }
 
 .black-points {
@@ -125,10 +126,11 @@
 
 .game-info {
   border: solid 2px gray;
-  width: 20%;
+  width: 30%;
   margin: 1%;
   padding: 2%;
   text-align: center;
+  position: absolute;
 }
 
 .game-info span,
@@ -165,7 +167,7 @@ span {
 .pieces-div {
   height: 25px;
   padding: 2px;
-  padding-left: 5px;
+  margin-left: 15%;
 }
 
 
