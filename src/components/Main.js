@@ -4,9 +4,9 @@ require('styles/App.css');
 import React from 'react';
 import Board from './board.js';
 
-class App extends React.Component{
+class App extends React.Component {
 
-  render () {
+  render() {
     return (
       <Board />
     );
