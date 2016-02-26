@@ -39,13 +39,22 @@
   background: white;
 }
 
-.points {
+.points,
+.points-left {
   border-radius: 50%;
   width: 20px;
   height: 20px;
-  position: absolute;
   z-index: 9999;
   font-size: 15px;
+}
+
+.points {
+  border: 5px solid gray;
+  position: absolute;
+}
+
+.points-left {
+  float: left;
 }
 
 .grid-points {
@@ -59,7 +68,7 @@
 
 .game-info {
   border: solid 2px gray;
-  width: 15%;
+  width: 20%;
   margin: 1%;
   padding: 2%;
 }
@@ -87,9 +96,15 @@
 
 span {
   font-size: 20px;
+  width: 15px;
 }
 
 .board-div,
 .game-info {
   display: inline-block;
+}
+
+.pieces-div {
+  height: 25px;
+  padding: 2px;
 }

@@ -4,6 +4,7 @@ require('styles/App.css');
 import React from 'react';
 import Point from './point.js';
 import Grid from './grid.js';
+import PiecesLeft from './PiecesLeft.js';
 import GridPoint from './gridPoints.js';
 
 class Board extends React.Component {
@@ -23,7 +24,7 @@ class Board extends React.Component {
   }
 
   onPointClick(player, index) {
-    var obj = this.getNeighbours(index);
+    const obj = this.getNeighbours(index);
     const isRemove = this.state.isRemove;
     const array = this.state.array;
     const phase = this.state.phase;
@@ -54,13 +55,13 @@ class Board extends React.Component {
           this.state.black -= 1;
         }
         this.forceUpdate();
-        if ((this.isMill(obj.line, index) || this.isMill(obj.column, index)) ) {
+        if ((this.isMill(obj.line, index) || this.isMill(obj.column, index))) {
           alert((this.state.array[index] === 1 ? 'Red' : 'Black') + ' can move an opponents piece!');
           this.state.isRemove = 1;
           this.forceUpdate();
         }
       }
-      if ((red === 0) && (black === 0) && (this.isMill(obj.line, index) || this.isMill(obj.column, index)) ) {
+      if ((red === 0) && (black === 0) && (this.isMill(obj.line, index) || this.isMill(obj.column, index))) {
         alert((array[index] === 1 ? 'Red' : 'Black') + ' can move an opponents piece!');
         this.state.isRemove = 1;
       } else if ((red === 0) && (black === 0)) {
@@ -80,7 +81,7 @@ class Board extends React.Component {
           this.state.array[index] = this.state.array[isSelected];
           this.state.array[isSelected] = -1;
           this.state.isSelected = -1;
-          if ((this.isMill(obj.line, index) || this.isMill(obj.column, index)) ) {
+          if ((this.isMill(obj.line, index) || this.isMill(obj.column, index))) {
             alert((this.state.array[index] === 1 ? 'Red' : 'Black') + ' can move an opponents piece!');
             this.state.isRemove = 1;
             this.forceUpdate();
@@ -223,19 +224,22 @@ class Board extends React.Component {
   render() {
     const points = [];
     const pointsOnGrid = [];
+    const colorRed = {background: 'red', border: '0px'};
+    const colorBlack = {background: 'black', border: '0px'};
     for (let i = 0; i < 24; i++) {
+
       let left = '';
       let top = '';
       let background = '';
       if (i < 8) {
-        left = this.getAbsPosX(i - (this.getPosOnSquares(i) * 8), 200) - 10;
-        top = this.getAbsPosY(i - (this.getPosOnSquares(i) * 8), 200) - 10;
+        left = this.getAbsPosX(i - (this.getPosOnSquares(i) * 8), 200) - 15;
+        top = this.getAbsPosY(i - (this.getPosOnSquares(i) * 8), 200) - 15;
       } else if (i > 15) {
-        left = this.getAbsPosX(i - (this.getPosOnSquares(i) * 8), 100) + 90;
-        top = this.getAbsPosY(i - (this.getPosOnSquares(i) * 8), 100) + 90;
+        left = this.getAbsPosX(i - (this.getPosOnSquares(i) * 8), 100) + 85;
+        top = this.getAbsPosY(i - (this.getPosOnSquares(i) * 8), 100) + 85;
       } else {
-        left = this.getAbsPosX(i - (this.getPosOnSquares(i) * 8), 149) + 40;
-        top = this.getAbsPosY(i - (this.getPosOnSquares(i) * 8), 149) + 40;
+        left = this.getAbsPosX(i - (this.getPosOnSquares(i) * 8), 149) + 35;
+        top = this.getAbsPosY(i - (this.getPosOnSquares(i) * 8), 149) + 35;
       }
       if (this.state.array[i] === 1) {
         background = 'red';
@@ -246,10 +250,9 @@ class Board extends React.Component {
       }
       const isSelected = this.state.isSelected === i ? 'solid 3px green' : '';
       const style = {left: left, top: top, background: background, border: isSelected};
-      const gridStyle = {left: left - 5, top: top - 5};
-      points.push(<Point key={i} style={style} isSelected={isSelected} onClick={this.onPointClick.bind(this)} index={i}
-                         player={this.state.player}/>);
-      pointsOnGrid.push(<GridPoint key={i} style={gridStyle}> </GridPoint>)
+      const gridStyle = {left: left, top: top};
+      points.push(<Point key={i} style={style} isSelected={isSelected} onClick={this.onPointClick.bind(this)} index={i} player={this.state.player}/>);
+      pointsOnGrid.push(<GridPoint key={i} index={i} onClick={this.onPointClick.bind(this)} player={this.state.player} style={gridStyle}/>)
     }
     return (
       <div>
@@ -262,10 +265,18 @@ class Board extends React.Component {
           <div>
             <button onClick={this.resetState.bind(this)}>Reset game</button>
           </div>
-          <span>Red: {this.state.red}</span>
-          <span>Black: {this.state.black}</span>
-          <div>{this.state.player === 1 ? 'Red ' : 'Black '} player</div>
-          <div>This is phase {this.state.phase}</div>
+          <div className="pieces-div">
+            <PiecesLeft style={colorRed} count={this.state.red}/>
+          </div>
+          <div className="pieces-div">
+            <PiecesLeft style={colorBlack} count={this.state.black}/>
+          </div>
+          <div>
+            {this.state.player === 1 ? 'Red ' : 'Black '} player
+          </div>
+          <div>
+            This is phase {this.state.phase}
+          </div>
         </div>
       </div>
     )
